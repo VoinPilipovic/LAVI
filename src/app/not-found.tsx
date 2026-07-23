@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/shared/logo";
 
@@ -14,7 +15,7 @@ export default function NotFound() {
         </p>
       </div>
       <Button asChild>
-        <a href="/">Back to homepage</a>
+        <Link href="/">Back to homepage</Link>
       </Button>
     </div>
   );

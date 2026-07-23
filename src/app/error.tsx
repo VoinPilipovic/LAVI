@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/shared/logo";
@@ -30,7 +31,7 @@ export default function GlobalError({ error, reset }: ErrorPageProps) {
           Try again
         </Button>
         <Button asChild>
-          <a href="/">Go home</a>
+          <Link href="/">Go home</Link>
         </Button>
       </div>
     </div>
