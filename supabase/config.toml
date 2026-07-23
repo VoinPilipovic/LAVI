@@ -1,0 +1,40 @@
+
+project_id = "lavi"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public"]
+extra_search_path = ["public"]
+max_rows = 1000
+
+[db]
+port = 54322
+major_version = 15
+
+[studio]
+enabled = true
+port = 54323
+
+[auth]
+enabled = true
+site_url = "http://localhost:3000"
+additional_redirect_urls = ["http://localhost:3000"]
+jwt_expiry = 3600
+enable_signup = false
+# Public signup is disabled in the beta — the only authenticated
+# identity is the single salon admin, provisioned manually via seed.sql
+# once migrations land in Phase 2. Guest booking does not use Supabase
+# Auth at all.
+
+[auth.email]
+enable_signup = false
+enable_confirmations = false
+
+[storage]
+enabled = true
+file_size_limit = "10MiB"
+
+# Migrations (supabase/migrations/*.sql) and seed data (supabase/seed.sql)
+# are introduced in Phase 2 alongside the schema. This file establishes
+# local project configuration only.

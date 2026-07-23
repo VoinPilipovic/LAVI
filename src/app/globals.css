@@ -1,0 +1,115 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /*
+     * ── THEME COLORS ──────────────────────────────────────────────
+     * RGB triplets (no "rgb()" wrapper) so tailwind.config.ts can
+     * consume them as `rgb(var(--color-x) / <alpha-value>)`, which
+     * keeps Tailwind opacity modifiers (e.g. `bg-gold/20`) working.
+     *
+     * This is the ACTUAL rendered palette. It must be kept in sync
+     * with the hex values documented in `src/config/business.ts`
+     * (`businessConfig.theme.colors`) — that file is the readable
+     * reference for what a client's brand colors are; this block is
+     * where they take effect. Re-skinning a client's colors means
+     * updating both.
+     * ─────────────────────────────────────────────────────────────
+     */
+    --color-ink: 11 11 12; /* #0B0B0C */
+    --color-ink-elevated: 21 21 23; /* #151517 */
+    --color-ink-border: 35 35 36; /* #232324 */
+    --color-gold: 200 164 100; /* #C8A464 */
+    --color-gold-bright: 228 195 132; /* #E4C384 */
+    --color-gold-dim: 138 114 69; /* #8A7245 */
+    --color-ivory: 246 243 236; /* #F6F3EC */
+    --color-ivory-dim: 168 163 154; /* #A8A39A */
+    --color-ivory-muted: 110 106 98; /* #6E6A62 */
+
+    /*
+     * shadcn/ui semantic tokens, expressed as HSL triplets (no "hsl()"
+     * wrapper) so `hsl(var(--x))` consumption works. These map onto the
+     * palette above — this is the bridge between the two systems, not
+     * a second palette.
+     */
+    --background: 240 4% 5%; /* ink */
+    --foreground: 45 24% 95%; /* ivory */
+
+    --card: 240 3% 9%; /* ink-elevated */
+    --card-foreground: 45 24% 95%;
+
+    --primary: 37 45% 60%; /* gold */
+    --primary-foreground: 240 4% 5%;
+
+    --secondary: 240 3% 9%; /* ink-elevated */
+    --secondary-foreground: 45 24% 95%;
+
+    --muted: 240 2% 14%;
+    --muted-foreground: 40 8% 65%; /* ivory-dim */
+
+    --accent: 37 45% 60%; /* gold */
+    --accent-foreground: 240 4% 5%;
+
+    --destructive: 6 45% 45%;
+    --destructive-foreground: 45 24% 95%;
+
+    --border: 240 2% 14%;
+    --input: 240 2% 14%;
+    --ring: 37 45% 60%; /* gold */
+
+    /* Sharp, restrained corners — precision over softness. */
+    --radius: 0.25rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-ink text-ivory antialiased;
+    font-feature-settings:
+      "cv02",
+      "cv03",
+      "cv04",
+      "cv11";
+  }
+
+  /* Visible keyboard focus everywhere — accessibility floor, not optional. */
+  :focus-visible {
+    @apply outline-none ring-2 ring-gold ring-offset-2 ring-offset-ink;
+  }
+
+  ::selection {
+    @apply bg-gold text-ink;
+  }
+}
+
+@layer utilities {
+  /*
+   * Signature typographic device: widely tracked uppercase labels,
+   * evoking engraved brass plate lettering. Used for section eyebrows,
+   * navigation labels, and price/category tags — never for body copy.
+   */
+  .text-eyebrow {
+    @apply font-sans text-xs uppercase tracking-eyebrow text-gold;
+  }
+
+  /* Thin gold hairline divider — the recurring "engraved line" motif. */
+  .divider-gold {
+    @apply h-px w-full bg-gradient-to-r from-transparent via-gold/60 to-transparent;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+}
