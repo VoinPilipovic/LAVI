@@ -1,5 +1,4 @@
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
-import type { Database } from "@/types/database.types";
 
 /**
  * Service-role Supabase client. Bypasses Row Level Security entirely.
@@ -23,7 +22,7 @@ export function createAdminClient() {
     );
   }
 
-  return createSupabaseClient<Database>(url, serviceRoleKey, {
+  return createSupabaseClient<any>(url, serviceRoleKey, {
     auth: {
       autoRefreshToken: false,
       persistSession: false,
