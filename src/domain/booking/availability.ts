@@ -84,8 +84,22 @@ export function generateAvailableSlots(params: AvailabilityParams): TimeSlot[] {
   const hours = WORKING_HOURS[weekday];
   if (!hours) return []; // Closed that day.
 
-  const [openHour, openMinute] = hours.open.split(":").map(Number);
-  const [closeHour, closeMinute] = hours.close.split(":").map(Number);
+  const openParts = hours.open.split(":").map(Number);
+  const closeParts = hours.close.split(":").map(Number);
+
+  const openHour = openParts[0];
+  const openMinute = openParts[1];
+  const closeHour = closeParts[0];
+  const closeMinute = closeParts[1];
+
+  if (
+    openHour === undefined ||
+    openMinute === undefined ||
+    closeHour === undefined ||
+    closeMinute === undefined
+  ) {
+    return [];
+  }
 
   const year = zonedDate.getFullYear();
   const month = zonedDate.getMonth();

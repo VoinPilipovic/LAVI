@@ -10,7 +10,11 @@
  * here by hand in the same phase.
  */
 
-export type AppointmentStatus = "confirmed" | "completed" | "cancelled" | "no_show";
+export type AppointmentStatus =
+  | "confirmed"
+  | "completed"
+  | "cancelled"
+  | "no_show";
 
 export interface Database {
   public: {
@@ -34,7 +38,9 @@ export interface Database {
           created_at?: string;
           updated_at?: string;
         };
+        Relationships: [];
       };
+
       business_profile: {
         Row: {
           id: boolean;
@@ -44,7 +50,10 @@ export interface Database {
           phone: string;
           email: string;
           instagram_url: string | null;
-          working_hours: Record<string, { open: string; close: string } | null>;
+          working_hours: Record<
+            string,
+            { open: string; close: string } | null
+          >;
           theme: Record<string, unknown>;
           updated_at: string;
         };
@@ -56,7 +65,10 @@ export interface Database {
           phone: string;
           email: string;
           instagram_url?: string | null;
-          working_hours?: Record<string, { open: string; close: string } | null>;
+          working_hours?: Record<
+            string,
+            { open: string; close: string } | null
+          >;
           theme?: Record<string, unknown>;
           updated_at?: string;
         };
@@ -68,11 +80,16 @@ export interface Database {
           phone?: string;
           email?: string;
           instagram_url?: string | null;
-          working_hours?: Record<string, { open: string; close: string } | null>;
+          working_hours?: Record<
+            string,
+            { open: string; close: string } | null
+          >;
           theme?: Record<string, unknown>;
           updated_at?: string;
         };
+        Relationships: [];
       };
+
       services: {
         Row: {
           id: string;
@@ -107,7 +124,9 @@ export interface Database {
           created_at?: string;
           updated_at?: string;
         };
+        Relationships: [];
       };
+
       customers: {
         Row: {
           id: string;
@@ -133,7 +152,9 @@ export interface Database {
           created_at?: string;
           updated_at?: string;
         };
+        Relationships: [];
       };
+
       appointments: {
         Row: {
           id: string;
@@ -180,7 +201,9 @@ export interface Database {
           created_at?: string;
           updated_at?: string;
         };
+        Relationships: [];
       };
+
       blocked_slots: {
         Row: {
           id: string;
@@ -203,7 +226,9 @@ export interface Database {
           reason?: string | null;
           created_at?: string;
         };
+        Relationships: [];
       };
+
       loyalty_ledger: {
         Row: {
           id: string;
@@ -229,17 +254,29 @@ export interface Database {
           reason?: string;
           created_at?: string;
         };
+        Relationships: [];
       };
     };
-    Views: Record<string, never>;
+
+    Views: {
+      [_ in never]: never;
+    };
+
     Functions: {
       is_admin: {
-        Args: Record<string, never>;
+        Args: {
+          [_ in never]: never;
+        };
         Returns: boolean;
       };
     };
+
     Enums: {
       appointment_status: AppointmentStatus;
+    };
+
+    CompositeTypes: {
+      [_ in never]: never;
     };
   };
 }

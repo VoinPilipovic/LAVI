@@ -111,8 +111,24 @@ async function fetchDayOccupancy(
  * day, never the time-of-day itself.
  */
 function anchorCalendarDate(dateStr: string): Date {
-  const [year, month, day] = dateStr.split("-").map(Number);
-  return fromZonedTime(new Date(year, month - 1, day, 12, 0, 0, 0), SALON_TIMEZONE);
+  const parts = dateStr.split("-").map(Number);
+
+  const year = parts[0];
+  const month = parts[1];
+  const day = parts[2];
+
+  if (
+    year === undefined ||
+    month === undefined ||
+    day === undefined
+  ) {
+    throw new Error("Invalid date.");
+  }
+
+  return fromZonedTime(
+    new Date(year, month - 1, day, 12, 0, 0, 0),
+    SALON_TIMEZONE,
+  );
 }
 
 /** Computes bookable time slots for a service on a given calendar day. */
