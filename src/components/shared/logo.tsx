@@ -18,7 +18,7 @@ export function Logo({ className, href = "/" }: LogoProps) {
       href={href}
       className={cn(
         "font-display text-2xl uppercase tracking-eyebrow text-ivory transition-colors " +
-          "hover:text-gold",
+          "hover:text-accent",
         className,
       )}
     >

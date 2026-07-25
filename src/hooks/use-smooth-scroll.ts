@@ -32,7 +32,22 @@ export function useSmoothScroll() {
     const handleResize = () => ScrollTrigger.refresh();
     window.addEventListener("resize", handleResize);
 
+    // Fraunces/Inter load with `display: "swap"`, so the fallback font's
+    // metrics are what every ScrollTrigger below the hero measures itself
+    // against at first paint. Once the real fonts swap in, text reflows
+    // and every trigger position calculated before that point goes stale
+    // — refreshing once fonts are actually ready re-measures everything
+    // against final layout, which is what fixes reveals that "freeze" or
+    // stop retriggering correctly further down the page.
+    let cancelled = false;
+    if (typeof document !== "undefined" && "fonts" in document) {
+      document.fonts.ready.then(() => {
+        if (!cancelled) ScrollTrigger.refresh();
+      });
+    }
+
     return () => {
+      cancelled = true;
       window.removeEventListener("resize", handleResize);
     };
   }, []);

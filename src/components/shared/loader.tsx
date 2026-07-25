@@ -10,7 +10,7 @@ interface LoaderProps {
 }
 
 /**
- * Full-viewport luxury loading state: a thin gold line draws itself
+ * Full-viewport luxury loading state: a thin accent line draws itself
  * beneath the wordmark. Deliberately restrained — one animated element,
  * not a spinner — matching the brand's "quiet confidence" direction.
  */
@@ -29,7 +29,7 @@ export function Loader({ className, label = "Loading" }: LoaderProps) {
       </span>
       <div className="h-px w-24 overflow-hidden bg-ivory/10">
         <motion.div
-          className="h-full w-full bg-gold"
+          className="h-full w-full bg-accent"
           initial={{ x: "-100%" }}
           animate={{ x: "100%" }}
           transition={{

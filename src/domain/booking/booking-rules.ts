@@ -143,6 +143,16 @@ export function isWithinWorkingHours(
   );
 }
 
+/**
+ * `message` here is a stable error CODE (see Dictionary["booking"]["errors"]
+ * in src/locales/types.ts), never an English sentence — this domain layer
+ * has no notion of the guest's locale, only the application layer
+ * (src/actions/booking.actions.ts) forwards it on, and the client
+ * translates the code via src/lib/booking-errors.ts. `MINIMUM_NOTICE_REQUIRED`
+ * and `TIME_ALREADY_PASSED` share the `INSUFFICIENT_NOTICE` violation
+ * classification but are distinct message codes, since they read very
+ * differently to a guest.
+ */
 export function validateBookingRequest(
   candidate: BookingCandidate,
   now: Date = new Date(),
@@ -150,21 +160,21 @@ export function validateBookingRequest(
   if (!isAfter(candidate.startTime, now)) {
     return fail(
       "INSUFFICIENT_NOTICE",
-      "This time has already passed.",
+      "TIME_ALREADY_PASSED",
     );
   }
 
   if (!hasMinimumNotice(candidate.startTime, now)) {
     return fail(
       "INSUFFICIENT_NOTICE",
-      `Bookings require at least ${MIN_BOOKING_NOTICE_HOURS} hours' notice.`,
+      "MINIMUM_NOTICE_REQUIRED",
     );
   }
 
   if (!isWithinBookingWindow(candidate.startTime, now)) {
     return fail(
       "OUTSIDE_BOOKING_WINDOW",
-      `Bookings can only be made up to ${MAX_BOOKING_WINDOW_DAYS} days in advance.`,
+      "OUTSIDE_BOOKING_WINDOW",
     );
   }
 
@@ -176,7 +186,7 @@ export function validateBookingRequest(
   ) {
     return fail(
       "OUTSIDE_WORKING_HOURS",
-      "This time falls outside working hours.",
+      "OUTSIDE_WORKING_HOURS",
     );
   }
 

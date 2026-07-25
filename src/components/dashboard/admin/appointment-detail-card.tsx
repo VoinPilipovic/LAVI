@@ -93,7 +93,7 @@ export function AppointmentDetailCard({ appointment: initial }: AppointmentDetai
             </div>
             <div className="flex items-center justify-between py-3">
               <dt className="text-ivory-dim">Price</dt>
-              <dd className="font-display text-gold">{formatPrice(appointment.service.price)}</dd>
+              <dd className="font-display text-accent">{formatPrice(appointment.service.price)}</dd>
             </div>
           </>
         ) : null}

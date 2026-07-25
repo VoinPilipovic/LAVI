@@ -1,7 +1,10 @@
 "use client";
 
-import { Scissors } from "lucide-react";
-import { useScrollAnimation } from "@/hooks/use-scroll-animation";
+import { useEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
+import { usePrefersReducedMotion } from "@/hooks/use-media-query";
+import { useLocale } from "@/components/providers/locale-provider";
 import { formatPrice, formatDuration } from "@/lib/utils";
 import type { Tables } from "@/types/supabase";
 
@@ -10,56 +13,103 @@ interface ServicesListProps {
 }
 
 /**
- * Pure rendering + scroll animation, no data fetching — the parent
- * (services-preview.tsx) is a Server Component that fetches from
- * Supabase and passes the result down, since GSAP/ScrollTrigger needs
- * a browser environment and can't run server-side.
+ * Editorial numbered list rather than generic rounded cards: large
+ * display numbering carries the visual weight, a thin line draws in
+ * under each row on scroll, and the only interactive color is the
+ * restrained blue underline that grows in on hover/focus — usable on
+ * touch since it's decoration on a non-interactive row, not a control.
  */
 export function ServicesList({ services }: ServicesListProps) {
-  const listRef = useScrollAnimation<HTMLDivElement>({
-    selector: "[data-service-row]",
-    stagger: 0.08,
-  });
+  const listRef = useRef<HTMLDivElement>(null);
+  const prefersReducedMotion = usePrefersReducedMotion();
+  const { dict } = useLocale();
+
+  useEffect(() => {
+    if (!listRef.current) return;
+
+    gsap.registerPlugin(ScrollTrigger);
+    const rows = listRef.current.querySelectorAll<HTMLElement>("[data-service-row]");
+    const lines = listRef.current.querySelectorAll<HTMLElement>("[data-service-line]");
+
+    if (rows.length === 0) return;
+
+    if (prefersReducedMotion) {
+      gsap.set(rows, { opacity: 1, y: 0 });
+      gsap.set(lines, { scaleX: 1 });
+      return;
+    }
+
+    const ctx = gsap.context(() => {
+      gsap.set(rows, { opacity: 0, y: 22 });
+      gsap.set(lines, { scaleX: 0, transformOrigin: "left" });
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: listRef.current,
+          start: "top 82%",
+        },
+      });
+
+      rows.forEach((row, index) => {
+        const line = lines[index];
+        tl.to(row, { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, index * 0.12);
+        if (line) {
+          tl.to(line, { scaleX: 1, duration: 0.8, ease: "power2.out" }, index * 0.12);
+        }
+      });
+    }, listRef);
+
+    return () => ctx.revert();
+  }, [prefersReducedMotion, services.length]);
 
   if (services.length === 0) {
     return (
       <p className="mt-14 border-y border-ink-border py-10 text-center text-sm text-ivory-dim">
-        Services are being updated — check back shortly.
+        {dict.services.emptyState}
       </p>
     );
   }
 
   return (
-    <div ref={listRef} className="mt-14 divide-y divide-ink-border border-y border-ink-border">
-      {services.map((service) => (
-        <div
-          key={service.id}
-          data-service-row
-          className="group flex flex-col gap-3 py-6 opacity-0 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:py-7"
-        >
-          <div className="flex items-start gap-4">
-            <Scissors
-              className="mt-1 h-4 w-4 shrink-0 text-gold/50 transition-colors group-hover:text-gold"
-              strokeWidth={1.25}
-            />
-            <div>
-              <h3 className="font-display text-xl text-ivory sm:text-2xl">{service.name}</h3>
-              {service.description ? (
-                <p className="mt-1 max-w-md text-sm text-ivory-dim">{service.description}</p>
-              ) : null}
-            </div>
-          </div>
+    <div ref={listRef} className="mt-14 border-t border-ink-border">
+      {services.map((service, index) => (
+        <div key={service.id} data-service-row className="group relative">
+          <span
+            data-service-line
+            aria-hidden
+            className="absolute left-0 top-0 h-px w-full bg-ink-border"
+          />
+          <span
+            data-service-line
+            aria-hidden
+            className="absolute bottom-0 left-0 h-px w-0 bg-accent/70 transition-[width] duration-500 ease-out group-hover:w-full group-focus-within:w-full"
+          />
 
-          <div className="flex shrink-0 items-baseline gap-4 pl-8 sm:pl-0">
-            <span className="text-sm text-ivory-dim">
-              {formatDuration(service.duration_minutes)}
-            </span>
-            <span className="font-display text-xl text-gold">
-              {formatPrice(service.price)}
-            </span>
+          <div className="flex flex-col gap-4 py-7 sm:flex-row sm:items-center sm:justify-between sm:gap-8">
+            <div className="flex items-start gap-6">
+              <span className="font-display text-sm text-ivory-dim/60 sm:text-base">
+                {String(index + 1).padStart(2, "0")}
+              </span>
+              <div>
+                <h3 className="font-display text-xl text-ivory sm:text-2xl">{service.name}</h3>
+                {service.description ? (
+                  <p className="mt-1 max-w-md text-sm text-ivory-dim">{service.description}</p>
+                ) : null}
+              </div>
+            </div>
+
+            <div className="flex shrink-0 items-baseline gap-5 pl-11 sm:pl-0">
+              <span className="text-sm text-ivory-dim">
+                {formatDuration(service.duration_minutes)}
+              </span>
+              <span className="font-display text-xl text-ivory">
+                {formatPrice(service.price)}
+              </span>
+            </div>
           </div>
         </div>
       ))}
+      <div className="h-px w-full bg-ink-border" />
     </div>
   );
 }

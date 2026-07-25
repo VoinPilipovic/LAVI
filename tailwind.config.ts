@@ -36,15 +36,20 @@ const config: Config = {
           elevated: "rgb(var(--color-ink-elevated) / <alpha-value>)", // cards, panels, raised surfaces
           border: "rgb(var(--color-ink-border) / <alpha-value>)", // hairline borders on dark surfaces
         },
-        gold: {
-          DEFAULT: "rgb(var(--color-gold) / <alpha-value>)", // muted brass gold — primary accent
-          bright: "rgb(var(--color-gold-bright) / <alpha-value>)", // hover / active states
-          dim: "rgb(var(--color-gold-dim) / <alpha-value>)", // subdued gold for borders/dividers on light
+        cloud: {
+          DEFAULT: "rgb(var(--color-cloud) / <alpha-value>)", // light editorial section background
+          dim: "rgb(var(--color-cloud-dim) / <alpha-value>)", // hairline borders on light surfaces
+        },
+        accent: {
+          DEFAULT: "rgb(var(--color-accent) / <alpha-value>)", // restrained cool blue — the one accent
+          bright: "rgb(var(--color-accent-bright) / <alpha-value>)", // hover / active states
+          dim: "rgb(var(--color-accent-dim) / <alpha-value>)", // muted blue for borders/dividers on light
+          foreground: "hsl(var(--accent-foreground))", // shadcn/ui primitives (dropdown/select hover, etc.)
         },
         ivory: {
-          DEFAULT: "rgb(var(--color-ivory) / <alpha-value>)", // warm off-white background / text on dark
+          DEFAULT: "rgb(var(--color-ivory) / <alpha-value>)", // cool soft white — text on dark
           dim: "rgb(var(--color-ivory-dim) / <alpha-value>)", // secondary text on dark surfaces
-          muted: "rgb(var(--color-ivory-muted) / <alpha-value>)", // tertiary text on light surfaces
+          muted: "rgb(var(--color-ivory-muted) / <alpha-value>)", // tertiary text / text on light surfaces
         },
 
         // Semantic aliases consumed by shadcn/ui primitives.
@@ -64,10 +69,6 @@ const config: Config = {
         muted: {
           DEFAULT: "hsl(var(--muted))",
           foreground: "hsl(var(--muted-foreground))",
-        },
-        accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
         },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",

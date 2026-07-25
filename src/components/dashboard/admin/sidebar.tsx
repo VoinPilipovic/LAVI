@@ -22,7 +22,7 @@ function SignOutButton() {
     <form action={signOutAdmin}>
       <button
         type="submit"
-        className="flex items-center gap-2 text-sm text-ivory-dim transition-colors hover:text-gold"
+        className="flex items-center gap-2 text-sm text-ivory-dim transition-colors hover:text-accent"
       >
         <LogOut className="h-4 w-4" strokeWidth={1.5} />
         Sign out
@@ -52,7 +52,7 @@ export function AdminSidebar({ adminName }: AdminNavProps) {
               href={item.href}
               className={cn(
                 "flex items-center gap-3 rounded-sm px-3 py-2 text-sm transition-colors",
-                isActive ? "bg-gold/10 text-gold" : "text-ivory-dim hover:text-ivory",
+                isActive ? "bg-accent/10 text-accent" : "text-ivory-dim hover:text-ivory",
               )}
             >
               <Icon className="h-4 w-4" strokeWidth={1.5} />
@@ -87,7 +87,7 @@ export function AdminMobileNav() {
               key={item.href}
               href={item.href}
               aria-label={item.label}
-              className={cn("p-1", isActive ? "text-gold" : "text-ivory-dim")}
+              className={cn("p-1", isActive ? "text-accent" : "text-ivory-dim")}
             >
               <Icon className="h-5 w-5" strokeWidth={1.5} />
             </Link>

@@ -19,7 +19,7 @@ export default function GlobalError({ error, reset }: ErrorPageProps) {
   return (
     <div className="flex min-h-[70vh] flex-col items-center justify-center gap-6 px-6 text-center">
       <Logo />
-      <div className="divider-gold max-w-xs" />
+      <div className="divider-line max-w-xs" />
       <div className="space-y-2">
         <h1 className="font-display text-2xl text-ivory">Something went wrong</h1>
         <p className="max-w-md text-sm text-ivory-dim">

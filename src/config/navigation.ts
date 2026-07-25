@@ -1,5 +1,8 @@
+export type NavKey = "about" | "services" | "gallery" | "contact" | "bookNow";
+
 export interface NavLink {
-  label: string;
+  /** Looked up against `dict.nav[key]` for the translated label — see src/locales. */
+  key: NavKey;
   href: string;
 }
 
@@ -9,20 +12,17 @@ export interface NavLink {
  * work as in-page jumps from any scroll position.
  */
 export const mainNav: NavLink[] = [
-  { label: "About", href: "/#about" },
-  { label: "Services", href: "/#services" },
-  { label: "Gallery", href: "/#gallery" },
-  { label: "Contact", href: "/#contact" },
+  { key: "about", href: "/#about" },
+  { key: "services", href: "/#services" },
+  { key: "gallery", href: "/#gallery" },
+  { key: "contact", href: "/#contact" },
 ];
 
 /** Primary conversion action, surfaced in the navbar, hero, and CTA section. */
 export const bookingCta: NavLink = {
-  label: "Book Now",
+  key: "bookNow",
   href: "/booking",
 };
 
 /** Footer link groups, separate from primary nav so they can diverge later. */
-export const footerNav: NavLink[] = [
-  ...mainNav,
-  { label: "Book Now", href: "/booking" },
-];
+export const footerNav: NavLink[] = [...mainNav, bookingCta];

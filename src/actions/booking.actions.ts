@@ -5,7 +5,6 @@ import { fromZonedTime } from "date-fns-tz";
 import { createAdminClient } from "@/lib/supabase/admin";
 import {
   SALON_TIMEZONE,
-  CANCELLATION_CUTOFF_HOURS,
   RATE_LIMIT_WINDOW_MS,
   BOOKING_CREATE_LIMIT_PER_PHONE,
   BOOKING_CREATE_LIMIT_PER_IP,
@@ -42,6 +41,14 @@ import type { Tables, AppointmentStatus } from "@/types/supabase";
  * `cancellation_token`. The database's exclusion constraint on
  * `appointments` remains the unconditional last line of defense against
  * a race condition slipping past the availability re-check.
+ *
+ * Every `ActionResult` error below is a stable CODE (e.g.
+ * "SLOT_TAKEN"), never an English sentence — a Server Action has no way
+ * to know the browsing guest's chosen locale (locale is client-only
+ * state, see src/components/providers/locale-provider.tsx), so message
+ * translation happens on the client via src/lib/booking-errors.ts,
+ * which maps each code to Dictionary["booking"]["errors"] for the
+ * active locale.
  */
 
 export interface SlotOption {
@@ -60,7 +67,7 @@ export async function getActiveServices(): Promise<ActionResult<Tables<"services
     .order("sort_order", { ascending: true });
 
   if (error) {
-    return { success: false, error: "Could not load services. Please try again." };
+    return { success: false, error: "LOAD_SERVICES_FAILED" };
   }
 
   return { success: true, data: data ?? [] };
@@ -137,7 +144,7 @@ export async function getAvailableSlots(
 ): Promise<ActionResult<SlotOption[]>> {
   const parsed = availabilityQuerySchema.safeParse(rawInput);
   if (!parsed.success) {
-    return { success: false, error: "Invalid availability request." };
+    return { success: false, error: "INVALID_REQUEST" };
   }
   const { serviceId, date } = parsed.data;
 
@@ -149,7 +156,7 @@ export async function getAvailableSlots(
     .maybeSingle();
 
   if (serviceError || !service || !service.is_active) {
-    return { success: false, error: "This service is not available." };
+    return { success: false, error: "SERVICE_UNAVAILABLE" };
   }
 
   const anchor = anchorCalendarDate(date);
@@ -157,7 +164,7 @@ export async function getAvailableSlots(
   const occupancy = await fetchDayOccupancy(dayBounds);
 
   if (!occupancy) {
-    return { success: false, error: "Could not check availability. Please try again." };
+    return { success: false, error: "AVAILABILITY_CHECK_FAILED" };
   }
 
   const slots = generateAvailableSlots({
@@ -182,7 +189,7 @@ export async function createBooking(
 ): Promise<ActionResult<{ appointmentId: string; cancellationToken: string }>> {
   const parsed = createBookingSchema.safeParse(rawInput);
   if (!parsed.success) {
-    return { success: false, error: "Please check the form and try again." };
+    return { success: false, error: "INVALID_REQUEST" };
   }
   const { name, phone, email, serviceId, startTime } = parsed.data;
 
@@ -192,10 +199,7 @@ export async function createBooking(
     RATE_LIMIT_WINDOW_MS,
   );
   if (!phoneLimit.allowed) {
-    return {
-      success: false,
-      error: "Too many booking attempts with this phone number. Please try again later.",
-    };
+    return { success: false, error: "RATE_LIMIT_PHONE" };
   }
 
   const ip = await getRequestIp();
@@ -205,7 +209,7 @@ export async function createBooking(
     RATE_LIMIT_WINDOW_MS,
   );
   if (!ipLimit.allowed) {
-    return { success: false, error: "Too many booking attempts. Please try again later." };
+    return { success: false, error: "RATE_LIMIT_IP" };
   }
 
   const supabase = createAdminClient();
@@ -216,7 +220,7 @@ export async function createBooking(
     .maybeSingle();
 
   if (serviceError || !service || !service.is_active) {
-    return { success: false, error: "This service is not available." };
+    return { success: false, error: "SERVICE_UNAVAILABLE" };
   }
 
   const start = new Date(startTime);
@@ -231,7 +235,7 @@ export async function createBooking(
   const occupancy = await fetchDayOccupancy(dayBounds);
 
   if (!occupancy) {
-    return { success: false, error: "Could not verify availability. Please try again." };
+    return { success: false, error: "AVAILABILITY_CHECK_FAILED" };
   }
 
   const isAvailable = isCandidateAvailable(
@@ -241,10 +245,7 @@ export async function createBooking(
   );
 
   if (!isAvailable) {
-    return {
-      success: false,
-      error: "That time was just booked by someone else. Please choose another.",
-    };
+    return { success: false, error: "SLOT_TAKEN" };
   }
 
   // Recognize repeat guests by phone number; keep their details current.
@@ -255,7 +256,7 @@ export async function createBooking(
     .single();
 
   if (customerError || !customer) {
-    return { success: false, error: "Could not save your details. Please try again." };
+    return { success: false, error: "SAVE_DETAILS_FAILED" };
   }
 
   const { data: appointment, error: insertError } = await supabase
@@ -279,12 +280,9 @@ export async function createBooking(
     // other). Extremely rare, but this is exactly why the constraint
     // exists independently of the check above.
     if (insertError?.code === "23P01") {
-      return {
-        success: false,
-        error: "That time was just booked by someone else. Please choose another.",
-      };
+      return { success: false, error: "SLOT_TAKEN" };
     }
-    return { success: false, error: "Could not create your booking. Please try again." };
+    return { success: false, error: "CREATE_BOOKING_FAILED" };
   }
 
   return {
@@ -297,7 +295,7 @@ export async function createBooking(
 export async function cancelBooking(rawInput: CancelBookingInput): Promise<ActionResult<void>> {
   const parsed = cancelBookingSchema.safeParse(rawInput);
   if (!parsed.success) {
-    return { success: false, error: "Invalid cancellation request." };
+    return { success: false, error: "INVALID_REQUEST" };
   }
   const { appointmentId, token } = parsed.data;
 
@@ -307,7 +305,7 @@ export async function cancelBooking(rawInput: CancelBookingInput): Promise<Actio
     RATE_LIMIT_WINDOW_MS,
   );
   if (!cancelLimit.allowed) {
-    return { success: false, error: "Too many attempts. Please try again later." };
+    return { success: false, error: "RATE_LIMIT_GENERIC" };
   }
 
   const supabase = createAdminClient();
@@ -317,22 +315,19 @@ export async function cancelBooking(rawInput: CancelBookingInput): Promise<Actio
     .eq("id", appointmentId)
     .maybeSingle();
 
-  // Deliberately the same message whether the id doesn't exist or the
+  // Deliberately the same code whether the id doesn't exist or the
   // token doesn't match it — same reasoning as signInAdmin() never
   // revealing whether the email or the password was wrong.
   if (error || !appointment || appointment.cancellation_token !== token) {
-    return { success: false, error: "Booking not found or this link is invalid." };
+    return { success: false, error: "BOOKING_NOT_FOUND" };
   }
 
   if (appointment.status === "cancelled") {
-    return { success: false, error: "This booking has already been cancelled." };
+    return { success: false, error: "ALREADY_CANCELLED" };
   }
 
   if (!canCancel(new Date(appointment.start_time))) {
-    return {
-      success: false,
-      error: `Cancellations must be made at least ${CANCELLATION_CUTOFF_HOURS} hours before your appointment.`,
-    };
+    return { success: false, error: "CANCELLATION_TOO_LATE" };
   }
 
   const { error: updateError } = await supabase
@@ -341,7 +336,7 @@ export async function cancelBooking(rawInput: CancelBookingInput): Promise<Actio
     .eq("id", appointmentId);
 
   if (updateError) {
-    return { success: false, error: "Could not cancel your booking. Please try again." };
+    return { success: false, error: "CANCEL_BOOKING_FAILED" };
   }
 
   return { success: true, data: undefined };
@@ -374,10 +369,10 @@ export async function getBookingConfirmation(
     .eq("id", appointmentId)
     .maybeSingle();
 
-  // Deliberately the same message whether the id doesn't exist or the
+  // Deliberately the same code whether the id doesn't exist or the
   // token doesn't match it — see the identical reasoning in cancelBooking().
   if (error || !appointment || appointment.cancellation_token !== token) {
-    return { success: false, error: "Booking not found or this link is invalid." };
+    return { success: false, error: "BOOKING_NOT_FOUND" };
   }
 
   const { data: service, error: serviceError } = await supabase
@@ -387,7 +382,7 @@ export async function getBookingConfirmation(
     .maybeSingle();
 
   if (serviceError || !service) {
-    return { success: false, error: "Booking not found." };
+    return { success: false, error: "BOOKING_NOT_FOUND" };
   }
 
   return {

@@ -1,23 +1,17 @@
 /**
  * ── BUSINESS CONFIGURATION ──────────────────────────────────────────
- * The single source of truth for everything specific to THIS client
- * (LAVI). This codebase is built as a reusable template — adapting it
- * for a different business (auto detailing, restaurant, dental clinic,
- * beauty salon, etc.) should mean editing this file, swapping images
- * under /public/images, and updating the Supabase seed data — not
- * touching component code.
- *
- * Where content still lives in a component instead of here, it's
- * because it's structural (how a section is laid out) rather than
- * content (what it says) — see each component's comments.
+ * Locale-agnostic business DATA for this client (LAVI) — identity,
+ * contact details, social links, and theme. Everything a visitor reads
+ * as language content (headlines, section copy, labels) now lives in
+ * `src/locales/*.ts` instead, since it must vary per language — see
+ * `src/locales/types.ts` for the full translatable shape. This file
+ * only holds facts that stay the same across RS/EN/RO: the address
+ * doesn't get translated, the phone number doesn't get translated.
  *
  * Services and prices are NOT configured here — they live in the
  * `services` database table (see supabase/migrations and
  * supabase/seed.sql) so the admin can manage them without a code
- * change. This file covers content that isn't yet worth a database
- * round trip: identity, copy, contact details, and the working hours
- * schedule (also mirrored in src/lib/constants.ts for the booking
- * engine — see the note on that file).
+ * change.
  * ─────────────────────────────────────────────────────────────────
  */
 
@@ -41,67 +35,20 @@ export const businessConfig = {
   /** Short category descriptor appended to page titles, e.g. "LAVI — Luxury Barber Salon". */
   category: "Luxury Barber Salon",
 
-  /** One-line site description, used for SEO and the footer. */
+  /**
+   * One-line site description, used for SEO metadata only (see the
+   * note in src/locales/types.ts on why SEO stays in one language).
+   * The footer's visible tagline comes from dict.footer.description.
+   */
   description:
     "LAVI is a premium barber salon offering precision cuts, grooming, and " +
     "a refined experience. Book your appointment online in under a minute.",
 
-  /** Hero section content. */
-  hero: {
-    eyebrow: "Lisbon — By Appointment",
-    headlineLines: ["One chair.", "Undivided attention."],
-    subheadline:
-      "LAVI is a single-chair barbering atelier — precision cuts, straight-razor " +
-      "shaves, and grooming, done properly, with nothing rushed.",
-    /** Words cycled through the hero's signature scrolling marquee band. */
-    marqueeWords: ["FADES", "SHAVES", "BEARD SCULPT", "GROOMING", "PRECISION"],
-    secondaryCtaLabel: "See the atelier",
-  },
-
-  /** About section content. */
-  about: {
-    eyebrow: "About LAVI",
-    title: "No front desk. No rotation of barbers. Just the work.",
-    description:
-      "LAVI was built around a simple idea: a haircut is a craft, not a " +
-      "transaction. There's one chair, one barber, and one appointment at a " +
-      "time — so the person in the chair gets full attention from the first " +
-      "towel to the final line-up.",
-    quickFacts: [
-      { label: "Founded", value: "2019" },
-      { label: "Chairs", value: "One" },
-      { label: "Appointment length", value: "30–75 min" },
-    ],
-  },
-
-  /** Services section heading copy (the services themselves are DB-driven). */
-  services: {
-    eyebrow: "Services & Pricing",
-    title: "Priced plainly. No surprises at the chair.",
-  },
-
-  /** Gallery section heading copy. */
-  gallery: {
-    eyebrow: "Gallery",
-    title: "A look inside the work.",
-  },
-
-  /** Contact section content. */
+  /** Contact facts — not translated, the same in every locale. */
   contact: {
-    eyebrow: "Contact",
-    title: "Find the chair.",
-    description:
-      "Walk-ins are welcome when there's room on the calendar, but an " +
-      "appointment guarantees your slot.",
     address: "Rua do Ourives 14, 1200-159 Lisboa",
     phone: "+351 21 456 7890",
     email: "reserve@lavi.pt",
-  },
-
-  /** Final CTA section content. */
-  cta: {
-    eyebrow: "Reserve Your Chair",
-    title: "Slots are limited to one appointment at a time — book ahead.",
   },
 
   /** Social links. Instagram is a static outbound link in the beta — no API integration. */
@@ -121,15 +68,17 @@ export const businessConfig = {
    */
   theme: {
     colors: {
-      ink: "#0B0B0C",
-      inkElevated: "#151517",
-      inkBorder: "#232324",
-      gold: "#C8A464",
-      goldBright: "#E4C384",
-      goldDim: "#8A7245",
-      ivory: "#F6F3EC",
-      ivoryDim: "#A8A39A",
-      ivoryMuted: "#6E6A62",
+      ink: "#0A0A0B",
+      inkElevated: "#141517",
+      inkBorder: "#26282C",
+      cloud: "#E7E9EB",
+      cloudDim: "#D3D6D9",
+      accent: "#609CC7",
+      accentBright: "#8ABEE0",
+      accentDim: "#3A5C74",
+      ivory: "#F0F2F5",
+      ivoryDim: "#98A0AA",
+      ivoryMuted: "#606770",
     },
     fonts: {
       display: "Fraunces",

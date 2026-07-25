@@ -15,7 +15,7 @@ export default async function AppointmentDetailPage({ params }: AppointmentDetai
     <div className="space-y-6">
       <Link
         href="/admin"
-        className="inline-flex items-center gap-2 text-sm text-ivory-dim transition-colors hover:text-gold"
+        className="inline-flex items-center gap-2 text-sm text-ivory-dim transition-colors hover:text-accent"
       >
         <ArrowLeft className="h-4 w-4" strokeWidth={1.5} />
         Back to dashboard

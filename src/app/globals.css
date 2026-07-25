@@ -8,7 +8,7 @@
      * ── THEME COLORS ──────────────────────────────────────────────
      * RGB triplets (no "rgb()" wrapper) so tailwind.config.ts can
      * consume them as `rgb(var(--color-x) / <alpha-value>)`, which
-     * keeps Tailwind opacity modifiers (e.g. `bg-gold/20`) working.
+     * keeps Tailwind opacity modifiers (e.g. `bg-accent/20`) working.
      *
      * This is the ACTUAL rendered palette. It must be kept in sync
      * with the hex values documented in `src/config/business.ts`
@@ -16,17 +16,26 @@
      * reference for what a client's brand colors are; this block is
      * where they take effect. Re-skinning a client's colors means
      * updating both.
+     *
+     * Palette identity: deep matte black / charcoal / graphite,
+     * cool soft-white and light gray, and exactly one restrained
+     * cool-blue accent — translating the real salon's white
+     * cabinetry, black fixtures, chrome tools and subtle blue
+     * barber-pole/screen light into the digital palette. No gold,
+     * no warm tones — accent is used sparingly, never as decoration.
      * ─────────────────────────────────────────────────────────────
      */
-    --color-ink: 11 11 12; /* #0B0B0C */
-    --color-ink-elevated: 21 21 23; /* #151517 */
-    --color-ink-border: 35 35 36; /* #232324 */
-    --color-gold: 200 164 100; /* #C8A464 */
-    --color-gold-bright: 228 195 132; /* #E4C384 */
-    --color-gold-dim: 138 114 69; /* #8A7245 */
-    --color-ivory: 246 243 236; /* #F6F3EC */
-    --color-ivory-dim: 168 163 154; /* #A8A39A */
-    --color-ivory-muted: 110 106 98; /* #6E6A62 */
+    --color-ink: 10 10 11; /* #0A0A0B — deep matte black */
+    --color-ink-elevated: 20 21 23; /* #141517 — charcoal */
+    --color-ink-border: 38 40 44; /* #26282C — graphite hairline */
+    --color-cloud: 231 233 235; /* #E7E9EB — soft cool gray editorial bg, not white */
+    --color-cloud-dim: 211 214 217; /* #D3D6D9 — hairline on cloud bg */
+    --color-accent: 96 156 199; /* #609CC7 — restrained cool blue */
+    --color-accent-bright: 138 190 224; /* #8ABEE0 — hover/active blue */
+    --color-accent-dim: 58 92 116; /* #3A5C74 — muted blue for borders */
+    --color-ivory: 240 242 245; /* #F0F2F5 — soft cool white */
+    --color-ivory-dim: 152 160 170; /* #98A0AA — cool gray, secondary text */
+    --color-ivory-muted: 96 103 112; /* #606770 — slate, tertiary/on-light text */
 
     /*
      * shadcn/ui semantic tokens, expressed as HSL triplets (no "hsl()"
@@ -34,30 +43,30 @@
      * palette above — this is the bridge between the two systems, not
      * a second palette.
      */
-    --background: 240 4% 5%; /* ink */
-    --foreground: 45 24% 95%; /* ivory */
+    --background: 240 6% 4%; /* ink */
+    --foreground: 216 20% 95%; /* ivory */
 
-    --card: 240 3% 9%; /* ink-elevated */
-    --card-foreground: 45 24% 95%;
+    --card: 220 5% 8%; /* ink-elevated */
+    --card-foreground: 216 20% 95%;
 
-    --primary: 37 45% 60%; /* gold */
-    --primary-foreground: 240 4% 5%;
+    --primary: 201 45% 58%; /* accent */
+    --primary-foreground: 240 6% 4%;
 
-    --secondary: 240 3% 9%; /* ink-elevated */
-    --secondary-foreground: 45 24% 95%;
+    --secondary: 220 5% 8%; /* ink-elevated */
+    --secondary-foreground: 216 20% 95%;
 
-    --muted: 240 2% 14%;
-    --muted-foreground: 40 8% 65%; /* ivory-dim */
+    --muted: 220 5% 13%;
+    --muted-foreground: 210 8% 64%; /* ivory-dim */
 
-    --accent: 37 45% 60%; /* gold */
-    --accent-foreground: 240 4% 5%;
+    --accent: 201 45% 58%;
+    --accent-foreground: 240 6% 4%;
 
     --destructive: 6 45% 45%;
-    --destructive-foreground: 45 24% 95%;
+    --destructive-foreground: 216 20% 95%;
 
-    --border: 240 2% 14%;
-    --input: 240 2% 14%;
-    --ring: 37 45% 60%; /* gold */
+    --border: 220 5% 14%;
+    --input: 220 5% 14%;
+    --ring: 201 45% 58%; /* accent */
 
     /* Sharp, restrained corners — precision over softness. */
     --radius: 0.25rem;
@@ -84,27 +93,34 @@
 
   /* Visible keyboard focus everywhere — accessibility floor, not optional. */
   :focus-visible {
-    @apply outline-none ring-2 ring-gold ring-offset-2 ring-offset-ink;
+    @apply outline-none ring-2 ring-accent ring-offset-2 ring-offset-ink;
   }
 
   ::selection {
-    @apply bg-gold text-ink;
+    @apply bg-accent text-ink;
   }
 }
 
 @layer utilities {
   /*
-   * Signature typographic device: widely tracked uppercase labels,
-   * evoking engraved brass plate lettering. Used for section eyebrows,
+   * Signature typographic device: widely tracked uppercase labels —
+   * cool, neutral gray rather than the accent color, so eyebrows read
+   * as quiet editorial labels and don't compete with the one
+   * restrained blue accent used elsewhere. Used for section eyebrows,
    * navigation labels, and price/category tags — never for body copy.
    */
   .text-eyebrow {
-    @apply font-sans text-xs uppercase tracking-eyebrow text-gold;
+    @apply font-sans text-xs uppercase tracking-eyebrow text-ivory-dim;
   }
 
-  /* Thin gold hairline divider — the recurring "engraved line" motif. */
-  .divider-gold {
-    @apply h-px w-full bg-gradient-to-r from-transparent via-gold/60 to-transparent;
+  /* Thin neutral hairline divider — the recurring "engraved line" motif. */
+  .divider-line {
+    @apply h-px w-full bg-gradient-to-r from-transparent via-ivory/25 to-transparent;
+  }
+
+  /* Same motif, reserved for the rare deliberate accent moment. */
+  .divider-accent {
+    @apply h-px w-full bg-gradient-to-r from-transparent via-accent/50 to-transparent;
   }
 
   @media (prefers-reduced-motion: reduce) {

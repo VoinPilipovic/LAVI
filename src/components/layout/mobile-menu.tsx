@@ -6,6 +6,8 @@ import Link from "next/link";
 import { X } from "lucide-react";
 import { mainNav, bookingCta } from "@/config/navigation";
 import { Button } from "@/components/ui/button";
+import { LanguageSwitcher } from "@/components/layout/language-switcher";
+import { useLocale } from "@/components/providers/locale-provider";
 
 interface MobileMenuProps {
   open: boolean;
@@ -19,6 +21,7 @@ interface MobileMenuProps {
  */
 export function MobileMenu({ open, onClose }: MobileMenuProps) {
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const { dict } = useLocale();
 
   // Move focus into the dialog when it opens (the close button is the
   // first focusable element and always present, unlike the staggered
@@ -48,14 +51,14 @@ export function MobileMenu({ open, onClose }: MobileMenuProps) {
           className="fixed inset-0 z-50 flex flex-col bg-ink/98 backdrop-blur-sm md:hidden"
           role="dialog"
           aria-modal="true"
-          aria-label="Site navigation"
+          aria-label={dict.nav.siteNavigation}
         >
           <div className="flex items-center justify-end px-5 pt-5">
             <button
               ref={closeButtonRef}
               onClick={onClose}
-              aria-label="Close menu"
-              className="rounded-sm p-2 text-ivory transition-colors hover:text-gold"
+              aria-label={dict.nav.closeMenu}
+              className="rounded-sm p-2 text-ivory transition-colors hover:text-accent"
             >
               <X className="h-6 w-6" strokeWidth={1.5} />
             </button>
@@ -72,9 +75,9 @@ export function MobileMenu({ open, onClose }: MobileMenuProps) {
                 <Link
                   href={link.href}
                   onClick={onClose}
-                  className="font-display text-3xl uppercase tracking-wide text-ivory transition-colors hover:text-gold"
+                  className="font-display text-3xl uppercase tracking-wide text-ivory transition-colors hover:text-accent"
                 >
-                  {link.label}
+                  {dict.nav[link.key]}
                 </Link>
               </motion.div>
             ))}
@@ -83,10 +86,11 @@ export function MobileMenu({ open, onClose }: MobileMenuProps) {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.08 * mainNav.length + 0.1, duration: 0.4 }}
-              className="pt-4"
+              className="flex flex-col items-center gap-6 pt-4"
             >
+              <LanguageSwitcher />
               <Button asChild size="lg" onClick={onClose}>
-                <Link href={bookingCta.href}>{bookingCta.label}</Link>
+                <Link href={bookingCta.href}>{dict.nav.bookNow}</Link>
               </Button>
             </motion.div>
           </nav>

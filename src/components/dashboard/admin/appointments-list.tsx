@@ -5,7 +5,7 @@ import type { AppointmentWithService } from "@/actions/appointment.actions";
 import type { AppointmentStatus } from "@/types/supabase";
 
 const statusStyles: Record<AppointmentStatus, string> = {
-  confirmed: "border-gold/40 text-gold",
+  confirmed: "border-accent/40 text-accent",
   completed: "border-ivory-dim/40 text-ivory-dim",
   cancelled: "border-destructive/40 text-destructive",
   no_show: "border-destructive/40 text-destructive",
@@ -35,7 +35,7 @@ function AppointmentRow({ appointment }: { appointment: AppointmentWithService }
       className="flex flex-col gap-2 border-b border-ink-border py-4 transition-colors hover:bg-ink-elevated sm:flex-row sm:items-center sm:justify-between sm:gap-4"
     >
       <div className="flex items-center gap-3">
-        <div className="w-16 shrink-0 text-sm text-gold">
+        <div className="w-16 shrink-0 text-sm text-accent">
           {formatSlotTime(new Date(appointment.start_time))}
         </div>
         <div>

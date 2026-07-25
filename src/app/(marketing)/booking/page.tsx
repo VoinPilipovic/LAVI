@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { buildMetadata } from "@/lib/seo";
 import { getActiveServices } from "@/actions/booking.actions";
+import { BookingHeader } from "@/components/booking/booking-header";
+import { BookingLoadError } from "@/components/booking/booking-load-error";
 import { BookingStepper } from "@/components/booking/booking-stepper";
 import { businessConfig } from "@/config/business";
 
@@ -18,13 +20,10 @@ export default async function BookingPage() {
   return (
     <section className="min-h-screen bg-ink pb-24 pt-32">
       <div className="container max-w-2xl">
-        <div className="mb-12 space-y-3 text-center">
-          <span className="text-eyebrow">Book an Appointment</span>
-          <h1 className="font-display text-3xl text-ivory sm:text-4xl">Reserve your chair</h1>
-        </div>
+        <BookingHeader />
 
         {!result.success ? (
-          <p className="text-center text-sm text-destructive">{result.error}</p>
+          <BookingLoadError code={result.error} />
         ) : (
           <BookingStepper services={services} />
         )}

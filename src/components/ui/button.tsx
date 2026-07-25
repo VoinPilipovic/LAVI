@@ -8,16 +8,19 @@ import { cn } from "@/lib/utils";
 const buttonVariants = cva(
   "inline-flex items-center justify-center whitespace-nowrap rounded-sm text-sm " +
     "font-medium tracking-wide transition-colors duration-200 focus-visible:outline-none " +
-    "focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 " +
+    "focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 " +
     "focus-visible:ring-offset-ink disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
-        default: "bg-gold text-ink hover:bg-gold-bright",
+        // Solid ivory on ink — the strong, high-contrast primary action.
+        // The blue accent is deliberately NOT the button color; it's
+        // reserved for outline/hover/focus detail so it stays restrained.
+        default: "bg-ivory text-ink hover:bg-white",
         outline:
-          "border border-gold/40 bg-transparent text-ivory hover:border-gold hover:bg-gold/10",
+          "border border-accent/40 bg-transparent text-ivory hover:border-accent hover:bg-accent/10",
         ghost: "bg-transparent text-ivory hover:bg-ivory/5",
-        link: "bg-transparent text-gold underline-offset-4 hover:underline",
+        link: "bg-transparent text-ivory underline-offset-4 hover:text-accent hover:underline",
       },
       size: {
         default: "h-11 px-6 py-2",

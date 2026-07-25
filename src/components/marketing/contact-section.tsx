@@ -1,11 +1,14 @@
+"use client";
+
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { GoogleMap } from "@/components/marketing/google-map";
 import { InstagramLink } from "@/components/marketing/instagram-link";
+import { useScrollAnimation } from "@/hooks/use-scroll-animation";
+import { useLocale } from "@/components/providers/locale-provider";
 import { WORKING_HOURS } from "@/lib/constants";
 import { businessConfig } from "@/config/business";
-
-const dayLabels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"] as const;
+import type { Dictionary } from "@/locales/types";
 
 type DayHours = {
   open: string;
@@ -25,10 +28,11 @@ function sameHours(a: DayHours, b: DayHours) {
 }
 
 /**
- * Groups consecutive days that share the same working hours
- * into a single display row.
+ * Groups consecutive days that share the same working hours into a
+ * single display row. `dayLabels` is Sun..Sat (dict.contact.days) so
+ * the grouped row labels translate along with everything else.
  */
-function formatWorkingHours() {
+function formatWorkingHours(dayLabels: Dictionary["contact"]["days"], closedLabel: string) {
   const displayOrder = [1, 2, 3, 4, 5, 6, 0] as const;
 
   const rows: {
@@ -75,7 +79,7 @@ function formatWorkingHours() {
 
     rows.push({
       label: i === j ? startLabel : `${startLabel}–${endLabel}`,
-      hours: entry ? `${entry.open} – ${entry.close}` : "Closed",
+      hours: entry ? `${entry.open} – ${entry.close}` : closedLabel,
     });
 
     i = j + 1;
@@ -85,16 +89,16 @@ function formatWorkingHours() {
 }
 
 export function ContactSection() {
-  const hoursRows = formatWorkingHours();
+  const { dict } = useLocale();
+  const hoursRows = formatWorkingHours(dict.contact.days, dict.contact.closed);
+  const listRef = useScrollAnimation<HTMLUListElement>({
+    selector: "[data-contact-item]",
+    stagger: 0.1,
+    yOffset: 14,
+  });
 
-  const {
-    eyebrow,
-    title,
-    description,
-    address,
-    phone,
-    email,
-  } = businessConfig.contact;
+  const { eyebrow, title, description } = dict.contact;
+  const { address, phone, email } = businessConfig.contact;
 
   return (
     <section
@@ -109,10 +113,10 @@ export function ContactSection() {
             description={description}
           />
 
-          <ul className="space-y-5 border-t border-ink-border pt-8">
-            <li className="flex items-start gap-3">
+          <ul ref={listRef} className="space-y-5 border-t border-ink-border pt-8">
+            <li data-contact-item className="flex items-start gap-3 opacity-0">
               <MapPin
-                className="mt-0.5 h-4 w-4 shrink-0 text-gold"
+                className="mt-0.5 h-4 w-4 shrink-0 text-ivory-dim"
                 strokeWidth={1.5}
               />
 
@@ -121,37 +125,37 @@ export function ContactSection() {
               </span>
             </li>
 
-            <li className="flex items-start gap-3">
+            <li data-contact-item className="flex items-start gap-3 opacity-0">
               <Phone
-                className="mt-0.5 h-4 w-4 shrink-0 text-gold"
+                className="mt-0.5 h-4 w-4 shrink-0 text-ivory-dim"
                 strokeWidth={1.5}
               />
 
               <a
                 href={`tel:${phone.replace(/\s/g, "")}`}
-                className="text-sm text-ivory-dim transition-colors hover:text-gold"
+                className="text-sm text-ivory-dim transition-colors hover:text-accent"
               >
                 {phone}
               </a>
             </li>
 
-            <li className="flex items-start gap-3">
+            <li data-contact-item className="flex items-start gap-3 opacity-0">
               <Mail
-                className="mt-0.5 h-4 w-4 shrink-0 text-gold"
+                className="mt-0.5 h-4 w-4 shrink-0 text-ivory-dim"
                 strokeWidth={1.5}
               />
 
               <a
                 href={`mailto:${email}`}
-                className="text-sm text-ivory-dim transition-colors hover:text-gold"
+                className="text-sm text-ivory-dim transition-colors hover:text-accent"
               >
                 {email}
               </a>
             </li>
 
-            <li className="flex items-start gap-3">
+            <li data-contact-item className="flex items-start gap-3 opacity-0">
               <Clock
-                className="mt-0.5 h-4 w-4 shrink-0 text-gold"
+                className="mt-0.5 h-4 w-4 shrink-0 text-ivory-dim"
                 strokeWidth={1.5}
               />
 

@@ -1,6 +1,8 @@
 "use client";
 
 import { Scissors } from "lucide-react";
+import { useLocale } from "@/components/providers/locale-provider";
+import { localeIntlTag } from "@/config/i18n";
 import { formatPrice, formatDuration } from "@/lib/utils";
 import type { Tables } from "@/types/supabase";
 
@@ -11,10 +13,12 @@ interface ServiceSelectorProps {
 }
 
 export function ServiceSelector({ services, selectedServiceId, onSelect }: ServiceSelectorProps) {
+  const { locale, dict } = useLocale();
+
   if (services.length === 0) {
     return (
       <p className="border border-ink-border bg-ink-elevated p-6 text-center text-sm text-ivory-dim">
-        No services are available for booking right now. Please check back shortly.
+        {dict.booking.service.emptyState}
       </p>
     );
   }
@@ -32,13 +36,13 @@ export function ServiceSelector({ services, selectedServiceId, onSelect }: Servi
             aria-pressed={isSelected}
             className={`flex flex-col gap-3 rounded-sm border p-5 text-left transition-colors ${
               isSelected
-                ? "border-gold bg-gold/5"
-                : "border-ink-border bg-ink-elevated hover:border-gold/40"
+                ? "border-accent bg-accent/5"
+                : "border-ink-border bg-ink-elevated hover:border-accent/40"
             }`}
           >
             <div className="flex items-start justify-between gap-3">
               <div className="flex items-start gap-3">
-                <Scissors className="mt-1 h-4 w-4 shrink-0 text-gold" strokeWidth={1.25} />
+                <Scissors className="mt-1 h-4 w-4 shrink-0 text-accent" strokeWidth={1.25} />
                 <div>
                   <h3 className="font-display text-lg text-ivory">{service.name}</h3>
                   {service.description ? (
@@ -51,8 +55,8 @@ export function ServiceSelector({ services, selectedServiceId, onSelect }: Servi
               <span className="text-sm text-ivory-dim">
                 {formatDuration(service.duration_minutes)}
               </span>
-              <span className="font-display text-lg text-gold">
-                {formatPrice(service.price)}
+              <span className="font-display text-lg text-accent">
+                {formatPrice(service.price, "EUR", localeIntlTag[locale])}
               </span>
             </div>
           </button>

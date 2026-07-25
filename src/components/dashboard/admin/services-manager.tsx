@@ -249,7 +249,7 @@ export function ServicesManager({ services: initial }: ServicesManagerProps) {
                   type="button"
                   onClick={() => setEditingId(service.id)}
                   aria-label="Edit service"
-                  className="p-2 text-ivory-dim transition-colors hover:text-gold"
+                  className="p-2 text-ivory-dim transition-colors hover:text-accent"
                 >
                   <Pencil className="h-4 w-4" strokeWidth={1.5} />
                 </button>

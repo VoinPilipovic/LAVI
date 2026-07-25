@@ -5,8 +5,10 @@ import Link from "next/link";
 import { Menu } from "lucide-react";
 import { Logo } from "@/components/shared/logo";
 import { MobileMenu } from "@/components/layout/mobile-menu";
+import { LanguageSwitcher } from "@/components/layout/language-switcher";
 import { Button } from "@/components/ui/button";
 import { mainNav, bookingCta } from "@/config/navigation";
+import { useLocale } from "@/components/providers/locale-provider";
 import { cn } from "@/lib/utils";
 
 /**
@@ -18,9 +20,10 @@ import { cn } from "@/lib/utils";
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { dict } = useLocale();
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 24);
+    const handleScroll = () => setScrolled(window.scrollY > 96);
     handleScroll();
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
@@ -30,8 +33,10 @@ export function Navbar() {
     <>
       <header
         className={cn(
-          "fixed inset-x-0 top-0 z-40 transition-colors duration-300",
-          scrolled ? "border-b border-ink-border bg-ink/95 backdrop-blur-sm" : "bg-transparent",
+          "fixed inset-x-0 top-0 z-40 transition-all duration-500 ease-out",
+          scrolled
+            ? "border-b border-ink-border/70 bg-ink/65 backdrop-blur-md"
+            : "border-b border-transparent bg-transparent",
         )}
       >
         <div className="container flex h-20 items-center justify-between">
@@ -42,22 +47,23 @@ export function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-eyebrow !text-ivory-dim transition-colors hover:!text-gold"
+                className="text-eyebrow !text-ivory-dim transition-colors hover:!text-accent"
               >
-                {link.label}
+                {dict.nav[link.key]}
               </Link>
             ))}
           </nav>
 
-          <div className="hidden md:block">
-            <Button asChild>
-              <Link href={bookingCta.href}>{bookingCta.label}</Link>
+          <div className="hidden items-center gap-6 md:flex">
+            <LanguageSwitcher />
+            <Button asChild variant={scrolled ? "default" : "outline"}>
+              <Link href={bookingCta.href}>{dict.nav.bookNow}</Link>
             </Button>
           </div>
 
           <button
             onClick={() => setMobileMenuOpen(true)}
-            aria-label="Open menu"
+            aria-label={dict.nav.openMenu}
             className="p-2 text-ivory md:hidden"
           >
             <Menu className="h-6 w-6" strokeWidth={1.5} />

@@ -11,7 +11,7 @@ interface SectionHeadingProps {
 
 /**
  * The recurring section header pattern across the landing page: a small
- * tracked-out gold eyebrow label, a display-serif headline, and optional
+ * tracked-out accent eyebrow label, a display-serif headline, and optional
  * supporting copy. Encodes the eyebrow as a genuine label (what the
  * section is) rather than decoration.
  */

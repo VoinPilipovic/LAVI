@@ -4,6 +4,13 @@ import { z } from "zod";
  * Guest-supplied contact details. Kept as its own schema (rather than
  * folded directly into createBookingSchema) so the guest-details form
  * step can validate independently of which service/time was chosen.
+ *
+ * These specific English messages never reach a user — this schema is
+ * only used server-side (via createBookingSchema below) where a failed
+ * parse just returns a generic "INVALID_REQUEST" code, never a
+ * per-field message (see src/actions/booking.actions.ts). The form the
+ * guest actually sees validates against `createGuestDetailsSchema(...)`
+ * instead, built with the active locale's messages.
  */
 export const guestDetailsSchema = z.object({
   name: z.string().trim().min(2, "Enter your full name").max(100),
@@ -17,6 +24,28 @@ export const guestDetailsSchema = z.object({
 });
 
 export type GuestDetailsInput = z.infer<typeof guestDetailsSchema>;
+
+/**
+ * Same shape and rules as `guestDetailsSchema`, but with messages from
+ * the active locale's dictionary (Dictionary["booking"]["validation"])
+ * — used by the client-side guest details form so validation errors
+ * are never hardcoded in one language. Kept as a factory (not a second
+ * static schema) so it can rebuild with new messages when the visitor
+ * switches locale.
+ */
+export function createGuestDetailsSchema(messages: {
+  nameRequired: string;
+  phoneInvalid: string;
+  emailInvalid: string;
+}) {
+  return z.object({
+    name: z.string().trim().min(2, messages.nameRequired).max(100),
+    phone: z.string().trim().min(6, messages.phoneInvalid).max(30),
+    email: z
+      .union([z.string().trim().email(messages.emailInvalid), z.literal("")])
+      .optional(),
+  });
+}
 
 /**
  * Full payload for creating a booking — guest details plus the chosen
