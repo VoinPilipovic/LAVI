@@ -37,10 +37,14 @@ export interface Dictionary {
   };
   about: {
     eyebrow: string;
-    title: string;
+    /** Two-line editorial headline, revealed as separate lines. */
+    headlineLines: [string, string];
     description: string;
-    /** Three short brand-philosophy statements — replaces the old founding-year/chairs stat grid. */
-    philosophy: [string, string, string];
+    team: {
+      lavi: { name: string; role: string; bio: string; cta: string };
+      bugi: { name: string; role: string; bio: string; cta: string };
+    };
+    closingStatement: string;
     imageAlt: string;
     imageLabel: string;
   };

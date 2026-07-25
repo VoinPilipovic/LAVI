@@ -25,15 +25,34 @@ export const rs: Dictionary = {
     measurementLabels: ["0 MM", "1.5 MM", "3 MM", "ZONA PRELAZA"],
   },
   about: {
-    eyebrow: "O LAVI-ju",
-    title: "Bez recepcije. Bez rotacije berberina. Samo rad.",
+    eyebrow: "Upoznajte tim",
+    headlineLines: ["Jedan salon.", "Dva profesionalca."],
     description:
-      "LAVI je nastao iz jednostavne ideje: šišanje je zanat, a ne transakcija. " +
-      "Postoji jedna stolica, jedan berberin i jedan termin u isto vreme — tako " +
-      "da osoba u stolici dobija punu pažnju od prvog peškira do poslednjeg detalja.",
-    philosophy: ["Preciznost pre brzine.", "Zanat pre udobnosti.", "Jedan klijent, potpuna pažnja."],
-    imageAlt: "Stolica u LAVI salonu",
-    imageLabel: "Stolica",
+      "Svaki klijent dobija istu pažnju posvećenu detaljima, preciznosti i " +
+      "nezi. Izaberite berberina čiji stil vama najviše odgovara.",
+    team: {
+      lavi: {
+        name: "Lavi",
+        role: "Osnivačica",
+        bio:
+          "Lavinika je osnovala LAVI sa jasnom vizijom — da svaki klijent " +
+          "dobije više od šišanja. Preciznost, posvećenost detaljima i " +
+          "vrhunsko iskustvo postali su standard koji salon prati od prvog dana.",
+        cta: "Zakažite kod Lavi",
+      },
+      bugi: {
+        name: "Bugi",
+        role: "Desna ruka salona",
+        bio:
+          "Sebastian je bio prvi Lavin učenik, a danas je njena desna ruka. " +
+          "Svakom klijentu pristupa sa istom pažnjom, preciznošću i " +
+          "filozofijom koja je postala zaštitni znak LAVI salona.",
+        cta: "Zakažite kod Bugija",
+      },
+    },
+    closingStatement: "Bez obzira koga odaberete, dobićete isti standard kvaliteta koji definiše LAVI.",
+    imageAlt: "Lavi i Bugi na radu u LAVI berbernici",
+    imageLabel: "Tim",
   },
   services: {
     eyebrow: "Usluge i cene",

@@ -25,16 +25,35 @@ export const ro: Dictionary = {
     measurementLabels: ["0 MM", "1.5 MM", "3 MM", "ZONĂ DE TRANZIȚIE"],
   },
   about: {
-    eyebrow: "Despre LAVI",
-    title: "Fără recepție. Fără rotație de bărbieri. Doar muncă.",
+    eyebrow: "Cunoaște echipa",
+    headlineLines: ["Un singur salon.", "Doi profesioniști."],
     description:
-      "LAVI a fost construit în jurul unei idei simple: o tunsoare este o " +
-      "meserie, nu o tranzacție. Există un singur scaun, un singur bărbier și o " +
-      "singură programare la un moment dat — astfel încât persoana din scaun " +
-      "primește atenție deplină de la primul prosop până la ultimul detaliu.",
-    philosophy: ["Precizie înaintea vitezei.", "Meșteșug înaintea confortului.", "Un client, atenție completă."],
-    imageAlt: "Scaunul de la LAVI",
-    imageLabel: "Scaunul",
+      "Fiecare client primește aceeași atenție la detalii, precizie și grijă. " +
+      "Alege bărbierul al cărui stil ți se potrivește cel mai bine.",
+    team: {
+      lavi: {
+        name: "Lavi",
+        role: "Fondatoare",
+        bio:
+          "Lavinika a fondat LAVI cu o viziune clară — ca fiecare client să " +
+          "primească mai mult decât o tunsoare. Precizia, atenția la detalii " +
+          "și o experiență rafinată au devenit standardul pe care salonul îl " +
+          "urmează din prima zi.",
+        cta: "Programează-te la Lavi",
+      },
+      bugi: {
+        name: "Bugi",
+        role: "Mâna dreaptă a salonului",
+        bio:
+          "Sebastian a fost primul elev al Lavinicăi și este acum mâna ei " +
+          "dreaptă. Abordează fiecare client cu aceeași atenție, precizie și " +
+          "filozofie care a devenit semnătura salonului LAVI.",
+        cta: "Programează-te la Bugi",
+      },
+    },
+    closingStatement: "Indiferent pe cine alegi, vei experimenta același standard de calitate care definește LAVI.",
+    imageAlt: "Lavi și Bugi la lucru în salonul de bărbierit LAVI",
+    imageLabel: "Echipa",
   },
   services: {
     eyebrow: "Servicii și prețuri",

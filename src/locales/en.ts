@@ -25,16 +25,35 @@ export const en: Dictionary = {
     measurementLabels: ["0 MM", "1.5 MM", "3 MM", "BLEND ZONE"],
   },
   about: {
-    eyebrow: "About LAVI",
-    title: "No front desk. No rotation of barbers. Just the work.",
+    eyebrow: "Meet the Team",
+    headlineLines: ["One salon.", "Two professionals."],
     description:
-      "LAVI was built around a simple idea: a haircut is a craft, not a " +
-      "transaction. There's one chair, one barber, and one appointment at a " +
-      "time — so the person in the chair gets full attention from the first " +
-      "towel to the final line-up.",
-    philosophy: ["Precision over speed.", "Craft over convenience.", "One client, full attention."],
-    imageAlt: "The chair at LAVI",
-    imageLabel: "The Chair",
+      "Every client receives the same attention to detail, precision and " +
+      "care. Choose the barber whose style suits you best.",
+    team: {
+      lavi: {
+        name: "Lavi",
+        role: "Founder",
+        bio:
+          "Lavinika founded LAVI with a clear vision — that every client " +
+          "should leave with more than just a haircut. Precision, attention " +
+          "to detail, and a refined experience became the standard the salon " +
+          "has followed from day one.",
+        cta: "Book with Lavi",
+      },
+      bugi: {
+        name: "Bugi",
+        role: "Right-Hand Barber",
+        bio:
+          "Sebastian was Lavi's first student and is now her right hand. He " +
+          "brings the same attention, precision, and philosophy that has " +
+          "become LAVI's signature to every client.",
+        cta: "Book with Bugi",
+      },
+    },
+    closingStatement: "No matter who you choose, you'll experience the same standard of quality that defines LAVI.",
+    imageAlt: "Lavi and Bugi at work inside the LAVI barber salon",
+    imageLabel: "The Team",
   },
   services: {
     eyebrow: "Services & Pricing",
